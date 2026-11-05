@@ -1,4 +1,4 @@
-# Insurance premium load — SQL Server + SSIS
+# Insurance premium load: SQL Server + SSIS
 
 A small, end-to-end ETL demo: a monthly **premium transactions file** is loaded by an **SSIS** package into SQL Server, validated by a **stored procedure**, and published to a simple reporting model - with **reject handling**, an **idempotent MERGE**, a **load log** and **two layers of error handling**.
 
@@ -23,7 +23,7 @@ premium_YYYY_MM.csv ─▶ SSIS: LoadPremium.dtsx
 |---|---|
 | `dbo.state_map` | maps carrier state spellings (`N.C.`, `North Carolina`) to standard codes |
 | `dbo.dim_coverage` | coverages reported on (AUTO, HOME) |
-| `dbo.stg_premium` | staging — every column text, exactly as received |
+| `dbo.stg_premium` | staging: every column text, exactly as received |
 | `dbo.fact_premium` | one row per premium transaction; PK `txn_id`, FK to `dim_coverage`, `CHECK (premium > 0)` |
 | `dbo.reject_rows` | rejected rows with the reason |
 | `dbo.load_log` | one row per load: status, rows received / loaded / rejected, error message |
@@ -32,15 +32,15 @@ premium_YYYY_MM.csv ─▶ SSIS: LoadPremium.dtsx
 
 1. **Validate** every staging row in one `SELECT … CASE`: unmapped state (LEFT JOIN to the mapping), unknown coverage, invalid date or premium (`TRY_CONVERT`), non-positive premium.
 2. **Reject** bad rows into `reject_rows` with the reason.
-3. **MERGE** good rows into `fact_premium` — existing `txn_id` → update, new → insert (rerun-safe).
+3. **MERGE** good rows into `fact_premium`: existing `txn_id` → update, new → insert (rerun-safe).
 4. **Log** received / loaded / rejected counts.
 
 ## Error handling
 
 | Layer | Catches | Does |
 |---|---|---|
-| SQL — `TRY…CATCH` + transaction in the procedure | errors inside the database (e.g. a primary-key violation) | rolls back the whole load, logs `ERROR_MESSAGE()`, re-throws so the SSIS task fails |
-| SSIS — failure precedence constraint on *Load file* | the file is missing or unreadable | logs a FAILED row in `load_log` |
+| SQL: `TRY…CATCH` + transaction in the procedure | errors inside the database (e.g. a primary-key violation) | rolls back the whole load, logs `ERROR_MESSAGE()`, re-throws so the SSIS task fails |
+| SSIS: failure precedence constraint on *Load file* | the file is missing or unreadable | logs a FAILED row in `load_log` |
 
 ## Test files and results
 
