@@ -8,7 +8,7 @@ Package design:
 |---|---|---|---|
 | 1 | Clear staging | Execute SQL | `EXEC dbo.usp_clear_staging` |
 | 2 | Load file | Data Flow | Flat File Source (`FF_Premium`) → OLE DB Destination `dbo.stg_premium` (fast load) |
-| 3 | Load premium | Execute SQL | `EXEC dbo.usp_load_premium ?` — parameter 0 = `User::FileName` |
+| 3 | Load premium | Execute SQL | `EXEC dbo.usp_load_premium ?`; parameter 0 = `User::FileName` |
 | 4 | Log file failure | Execute SQL, on the **failure** path of task 2 | `INSERT INTO dbo.load_log (file_name, status, error_message) VALUES (?, 'FAILED', 'SSIS could not load the file into staging')` |
 
 - Variable: `User::FileName` (String), e.g. `premium_2025_01.csv`
