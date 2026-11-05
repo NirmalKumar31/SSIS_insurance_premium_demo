@@ -1,6 +1,6 @@
 # Insurance premium load — SQL Server + SSIS
 
-A small, end-to-end ETL demo: a monthly **premium transactions file** is loaded by an **SSIS** package into SQL Server, validated by a **stored procedure**, and published to a simple reporting model — with **reject handling**, an **idempotent MERGE**, a **load log** and **two layers of error handling**.
+A small, end-to-end ETL demo: a monthly **premium transactions file** is loaded by an **SSIS** package into SQL Server, validated by a **stored procedure**, and published to a simple reporting model - with **reject handling**, an **idempotent MERGE**, a **load log** and **two layers of error handling**.
 
 All data is synthetic; codes are illustrative.
 
